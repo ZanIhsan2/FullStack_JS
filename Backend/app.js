@@ -1,6 +1,6 @@
 const express = require('express'); //import express
 const router = require('./routes/api');
-const db = require('./config/database'); //import database
+const db = require('./config/databases'); //import database
 
 const app = express();
 
