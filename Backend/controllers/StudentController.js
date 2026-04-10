@@ -7,18 +7,11 @@ class StudentController {
         }
         res.json(data);
     }
-    
     store (req, res) {
-        const data = {
-            message: "Menyimpan data students",
-            data: req.body
-        }
-        res.json(data);
+        res.send("Menambahkan Data Students");
     }
-
     update (req, res) {
         const {id} = req.params;
-
         res.send(`Mengubah data students ${id}`);
     }
 
