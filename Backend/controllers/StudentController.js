@@ -1,14 +1,52 @@
+const Student = require("../models/Student");
+
 class StudentController {
 
+    // Get All
     index (req, res){
-        const data = {
-            message: "Menampilkan data students",
-            data: []
-        }
-        res.json(data);
+        Student.getAll((err, results) => {
+            if (err) {
+                return res.json({
+                    message: "Gagal Ambil data"
+                });
+            }
+            res.json({
+                message: "Berhasil Ambil data",
+                data:results
+            });
+        });
     }
+
+    // Get By ID
+    show(req, res){
+        const {id} = req.params;
+
+        Student.getById(id, (err, results) => {
+            if(err){
+                return res.json({message: "Data tidak ditemukan"});
+            }
+
+            res.json({
+                message: "Detail Student",
+                data: results[0]
+            });
+        });
+    }
+
+    // CREATE
     store (req, res) {
-        res.send("Menambahkan Data Students");
+        const data = req.body;
+
+        Student.create(data, (err) => {
+            if(err){
+                return res.json({message: "Gagal Menambahkan data"});
+            }
+
+            res.json({
+                message: "Data berhasil ditambahkan",
+                data: data
+            });
+        });
     }
     update (req, res) {
         const {id} = req.params;
