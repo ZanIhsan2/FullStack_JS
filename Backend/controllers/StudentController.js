@@ -77,9 +77,10 @@ class StudentController {
         }
         Student.update(id, data, (err) => {
             if(err){
-                return res.status(500).json({ message: "Gagal update data" });
+                return errorHandler(res, err, 500, "Gagal update data");
             }
             res.json({
+                succes: true,
                 message: "Data berhasil diupdate",
             });
         });
@@ -88,15 +89,16 @@ class StudentController {
     // Delete
     destroy (req, res) {
         const { id } = req.params;
-        const error = validatorId(id);
+        const error = validateId(id);
         if(error){
-            return res.status(400).json({ message: error });
+            return errorHandler(res, error, 400, error);
         }
         Student.delete(id, (err) => {
             if(err){
-                return res.status(500).json({ message: "Gagal hapus data" });
+                return errorHandler(res, err, 500, "Gagal hapus data");
             }
             res.json({
+                succes: true,
                 message: "Data berhasil dihapus"
             });
         });
