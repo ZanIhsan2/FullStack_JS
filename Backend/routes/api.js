@@ -1,23 +1,25 @@
-const express = require("express");
+const auth = require('../middleware/authMiddleware');
+const authorize = require('../middleware/authorizeMiddleware');
+const upload = require('../middleware/uploadMiddleware');
+const express = require('express');
 const router = express.Router();
 
-const authController = require('../controllers/AuthController'); //mengimport controller auth
-const StudentController = require('../controllers/StudentController'); //mengimport controller student
+// Authentication routes
+router.post("/register", (req, res)=>AuthController.register(req, res));
+router.post("/login", (req, res)=>AuthController.login(req, res));
 
-const auth = require('../middleware/authMiddleware'); //mengimport middleware auth
-const autorhize = require('../middleware/authorizeMiddleware');
-
-// AUTH     
-router.post("/register", (req, res)=>authController.register(req, res)); //route untuk register
-router.post("/login", (req, res)=>authController.login(req, res)); //route untuk login
-
-// STUDENT PROTECTED
-router.get("/students", auth, (req, res) => StudentController.index(req, res)); //route untuk mendapatkan semua data student, hanya bisa diakses oleh user yang sudah login
-router.get("/students/:id", auth, (req, res) => StudentController.show(req, res)); //route untuk mendapatkan data student berdasarkan id, hanya bisa diakses oleh user yang sudah login
+// Student (Protected)
+router.get("/students", auth, (req, res)=>StudentController.index(req, res));
+router.get("/students/:id", auth, (req, res)=>StudentController.show(req, res));
 
 // hanya admin
-router.post("/students", auth, autorhize("admin"), (req, res) => StudentController.store(req, res)); //route untuk mendapatkan semua data student, hanya bisa diakses oleh admin
-router.put("/students/:id", auth, autorhize("admin"), (req, res) => StudentController.update(req, res)); //route untuk mendapatkan data student berdasarkan id, hanya bisa diakses oleh admin
-router.delete("/students/:id", auth, autorhize("admin"), (req, res) => StudentController.destroy(req, res)); //route untuk mendapatkan data student berdasarkan id, hanya bisa diakses oleh admin
+// router.post("/students", auth, authorize("admin"), (req, res)=>StudentController.store(req, res));
+router.post(
+    "/students",
+    auth,
+    authorize("admin"),
+    upload.single("photo"),
+    (req, res) =>StudentController.store(req, res)
+);
 
-module.exports = router; 
+module.exports = router;
