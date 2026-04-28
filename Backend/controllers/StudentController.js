@@ -46,11 +46,22 @@ class StudentController {
     // CREATE
     store (req, res) {
         const data = req.body;
+
+        // validasi data
         const error = validateStudent(data);
-        // management error
         if(error){
             return errorHandler(res, error, 400, error);
         }
+
+        // validasi file
+        const fileError = validateFile(req.file);
+        if(fileError){
+            return errorHandler(res, fileError, 400, fileError);
+        }
+
+        // set photo
+        data.photo = req.file.filename;
+
         Student.create(data, (err) => {
             if(err){ 
                 return errorHandler(res, err, 500, "Gagal tambah data");
@@ -75,6 +86,17 @@ class StudentController {
         if(bodyError){
             return errorHandler(res, bodyError, 400, bodyError);
         }
+
+        // hanya validasi jika ada file
+        if(req.file) {
+            const fileError = validateFile(req.file);
+            if(fileError){
+                return errorHandler(res, fileError, 400, fileError);
+            }
+
+            data.photo = req.file.filename;
+        }
+
         Student.update(id, data, (err) => {
             if(err){
                 return errorHandler(res, err, 500, "Gagal update data");
