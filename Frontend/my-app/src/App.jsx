@@ -1,14 +1,11 @@
 import './App.css';
-import Hello from './components/Hello';
+import Home from './pages/Home';
 
 
 function App() {
 
   return (
-    <>
-      <h2>This is Create Vite</h2>
-      <Hello name="Razan"/>
-    </>
+      <Home/>
   )
 }
 
